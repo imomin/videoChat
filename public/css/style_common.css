@@ -1,0 +1,145 @@
+.view {
+	width: 316px;
+	height: 216px;
+	margin: 10px;
+	float: left;
+	position: relative;
+	/*border: 4px solid #fff;*/
+	box-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+	background: #333;
+	-webkit-perspective: 500px;
+	-moz-perspective: 500px;
+	-o-perspective: 500px;
+	-ms-perspective: 500px;
+	perspective: 500px;
+}
+
+.view .slice{
+	width: 60px;
+	height: 100%;
+	z-index: 100;
+	
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-o-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	
+	-webkit-transform-origin: left center;
+	-moz-transform-origin: left center;
+	-o-transform-origin: left center;
+	-ms-transform-origin: left center;
+	transform-origin: left center;
+	
+	-webkit-transition: -webkit-transform 150ms ease-in-out;
+	-moz-transition: -moz-transform 150ms ease-in-out;
+	-o-transition: -o-transform 150ms ease-in-out;
+	-ms-transition: -ms-transform 150ms ease-in-out;
+	transition: transform 150ms ease-in-out;
+		
+}
+
+.view div.view-back{
+	width: 50%;
+	height: 100%;
+	position: absolute;
+	right: 0;
+	background: #666;
+	z-index: 0;
+}
+
+.view-back span {
+	display: block;
+	float: right;
+	padding: 5px 20px 5px;
+	width: 100%;
+	text-align: right;
+	font-size: 16px;
+	color: rgba(255,255,255,0.6);
+}
+
+.view-back span:first-child {
+	padding-top: 20px;
+}
+
+.view-back a {
+	display: bock;
+	font-size: 18px;
+	color: rgba(255,255,255,0.4);
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
+	border: 2px solid rgba(255,255,255,0.3);
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	line-height: 22px;
+	text-align: center;
+	font-weight: 700;
+}
+
+.view-back a:hover {
+	color: #fff;
+	border-color: #fff;
+}
+
+.view-back span[data-icon]:before {
+    content: attr(data-icon);
+    font-family: 'icons';
+    color: #aaa;
+	color: rgba(255,255,255,0.2);
+	text-shadow: 0 0 1px rgba(255,255,255,0.2);
+	padding-right: 5px;
+}
+
+.view .s2, 
+.view .s3, 
+.view .s4, 
+.view .s5 {
+	-webkit-transform: translate3d(60px,0,0);
+	-moz-transform: translate3d(60px,0,0);
+	-o-transform: translate3d(60px,0,0);
+	-ms-transform: translate3d(60px,0,0);
+	transform: translate3d(60px,0,0);
+}
+.view .s1 {
+	background-position: 0px 0px;
+}
+.view .s2 {
+	background-position: -60px 0px;
+}
+.view .s3 {
+	background-position: -120px 0px;
+}
+.view .s4 {
+	background-position: -180px 0px;
+}
+.view .s5 {
+	background-position: -240px 0px;
+}
+
+.view .overlay {
+	width: 60px;
+	height: 100%;
+	opacity: 0;
+	position: absolute;
+	-webkit-transition: opacity 150ms ease-in-out;
+	-moz-transition: opacity 150ms ease-in-out;
+	-o-transition: opacity 150ms ease-in-out;
+	-ms-transition: opacity 150ms ease-in-out;
+	transition: opacity 150ms ease-in-out;
+}
+
+.view:hover .overlay {
+	opacity: 1;
+}
+
+.view img {
+	position: absolute;
+	z-index: 0;
+	-webkit-transition: left 0.3s ease-in-out;
+	-o-transition: left 0.3s ease-in-out;
+	-moz-transition: left 0.3s ease-in-out;
+	-ms-transition: left 0.3s ease-in-out;
+	transition: left 0.3s ease-in-out;
+}

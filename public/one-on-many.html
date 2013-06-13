@@ -1,0 +1,228 @@
+
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+   <meta charset="utf-8" />
+   <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame -->
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+   <!-- Mobile viewport optimized: h5bp.com/viewport -->
+   <meta name="viewport" content="width=device-width">
+
+   <title>WebRTC</title>
+
+   <meta name="robots" content="noindex, nofollow">
+   <meta name="description" content="" />
+   <meta name="keywords" content="" />
+   <meta name="author" content=""/>
+   
+   <!-- remove or comment this line if you want to use the local fonts -->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+
+   <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+   <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css">
+   <link rel="stylesheet" type="text/css" href="css/bootmetro.css">
+   <link rel="stylesheet" type="text/css" href="css/bootmetro-tiles.css">
+   <link rel="stylesheet" type="text/css" href="css/bootmetro-charms.css">
+   <link rel="stylesheet" type="text/css" href="css/metro-ui-dark.css">
+   <link rel="stylesheet" type="text/css" href="css/icomoon.css">  
+
+  <!--  <link rel="stylesheet" type="text/css" href="content/css/demo.css" /> -->
+   <link rel="stylesheet" type="text/css" href="css/style_common.css" />
+   <link rel="stylesheet" type="text/css" href="css/style1.css" />
+
+
+   <!-- Le fav and touch icons -->
+   <link rel="shortcut icon" href="content/ico/favicon.ico">
+   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+   <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+   <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+   <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+  
+   <!-- All JavaScript at the bottom, except for Modernizr and Respond.
+      Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
+      For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+   <script src="js//modernizr-2.6.1.min.js"></script>   
+   <script src="https://webrtc-experiment.appspot.com/firebase.js"></script>
+   <script src="js/webrtc/RTCMultiConnection-v1.2.js"></script>
+   <style type="text/css">
+     #remote-media-streams video {
+          width: 34em;
+      }
+      #local-media-stream video {
+          width: 34em;
+      }
+      .eject {
+          background-position: center center !important;
+          background-repeat: no-repeat !important;
+          background-image: url('/img/eject.png') !important;
+          width: 30px;
+          height: 30px;
+          position: absolute;
+          z-index: 200;
+          margin: .2em;
+          border-color: white;
+          border-radius: 0;
+      }
+   </style>
+</head>
+
+  <body data-accent="blue">
+       <header id="nav-bar" class="container-fluid">
+          <div class="row-fluid">
+             <div class="span8">
+                <div id="header-container">
+                   <a id="backbutton" class="win-backbutton" style="text-decoration:none;" href="index.html"></a>
+                </div>
+             </div>            
+       </div>
+       </header>
+    <div class="container">
+      <div class="row-fluid">
+        <div class="metro span12">
+            <h1>WebRTC</h1> 
+            <div><button id="open-session" disabled>Open NEW Session</button></div>
+            <div style="float:left;">
+              <section id="local-media-stream"></section>            
+            </div>
+            <br>
+            <div>                
+                <div>
+                  <section id="remote-media-streams"></section>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <footer class="win-commandlayout navbar-fixed-bottom win-ui-dark">
+        <div class="container">
+           <div class="row">                          
+           </div>
+        </div>
+     </footer>    
+     <script type="text/javascript" src='js/jquery/jquery.js'></script>   
+     <script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
+     <script type="text/javascript" src="js/bootmetro/bootmetro.js"></script>
+     <script type="text/javascript" src="js/bootmetro/bootmetro-charms.js"></script>    
+     <script type="text/javascript">        
+        $(".metro").metro();        
+        var hash = window.location.hash.replace('#', '');
+          if (!hash.length) {
+              location.href = location.href + '#' + ((Math.random() * new Date().getTime()).toString(36).toUpperCase().replace(/\./g, '-'));
+              location.reload();
+          }        
+        function initConnection(config) {
+            window.connection = new RTCMultiConnection(config.sessionid, {
+                firebase: 'rtcweb',
+                session: config.session,
+                direction: config.direction
+            });
+            connection.onopen = function () {
+                if (document.getElementById('open-session')) document.getElementById('open-session').disabled = true;
+            };
+            connection.onmessage = appendDIV;
+            connection.onstream = function (stream) {
+                var video = getVideo(stream);
+                if (stream.type === 'local') document.getElementById('local-media-stream').appendChild(video);
+
+                if (stream.type === 'remote') {
+                  debugger;
+                    if (stream.direction !== RTCDirection.OneWay) {
+                        var remoteMediaStreams = document.getElementById('remote-media-streams');
+                        remoteMediaStreams.appendChild(video, remoteMediaStreams.firstChild);
+                    } else document.getElementById('local-media-stream').appendChild(video);
+                }
+                stream.mediaElement.width = innerWidth / 3.4;
+            };
+
+            connection.onFileProgress = function (packets) {
+                appendDIV(packets.remaining + ' packets remaining.');
+                if (packets.sent) appendDIV(packets.sent + ' packets sent.');
+                if (packets.received) appendDIV(packets.received + ' packets received.');
+            };
+
+            connection.onFileReceived = function (fileName) {
+                appendDIV(fileName + ' received.');
+            };
+
+            connection.onFileSent = function (file) {
+                appendDIV(file.name + ' sent.');
+            };
+
+            connection.onleave = function (userid) {
+                var video = document.getElementById(userid);
+                if (video) video.parentNode.removeChild(video);
+            };            
+        }
+        window.onbeforeunload = function(e) {          
+          window.connection.session.onleave(connection._session.userid);            
+        };
+
+        document.getElementById('open-session').onclick = function () {
+            initConnection({
+                sessionid: hash,
+                session: 'audio and video',
+                direction: 'one-to-many'
+            });
+            connection.open();
+
+            this.disabled = true;
+            this.parentNode.innerHTML = '<h2><a href="' + location.href + '" target="_blank">Share this link</a></h2>';
+            window.isRoomInitiator = true;
+        };        
+
+        function appendDIV(data) {
+            var div = document.createElement('div');
+            div.innerHTML = data;
+            chatOutput.insertBefore(div, chatOutput.firstChild);
+            div.tabIndex = 0;
+            div.focus();        
+        }      
+
+        function getVideo(stream) {
+            var div = document.createElement('div');
+            div.className = 'video-container';
+            div.id = stream.userid || 'self';
+
+            if (stream.type === 'remote') {
+                if (window.isRoomInitiator) {
+                    var eject = document.createElement('button');
+                    eject.className = 'eject';
+                    eject.title = 'Eject this User';
+
+                    eject.onclick = function () {
+                        // eject a specific user
+                        connection.eject(this.parentNode.id);
+                        this.parentNode.style.display = 'none';
+                    };
+                    div.appendChild(eject);
+                }
+            }
+            stream.mediaElement.controls = true;
+            stream.mediaElement.autoplay = true;
+            div.appendChild(stream.mediaElement);
+            return div
+        }
+
+        console.debug('about to check presence of a room');
+        debugger;
+            new window.Firebase('https://rtcweb.firebaseIO.com/' + hash).once('value', function (data) {
+                var isRoomPresent = data.val() != null;
+                if (isRoomPresent) {
+                    initConnection({
+                        sessionid: hash,
+                        direction: 'one-to-many',
+                        session: 'audio-video'
+                    });
+                    document.getElementById('open-session').disabled = true;
+                    window.isRoomInitiator = false;
+                } else document.getElementById('open-session').disabled = false;
+
+                console.debug('room is present? ', isRoomPresent);
+            });                
+     </script>     
+  </body>
+</html>

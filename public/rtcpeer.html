@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html id="home" lang="en">
+<head>
+    <title>Vid Conf</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>       
+        #selfVideo video {
+            width: 14em;
+        }
+        #participants video {
+            width: 14em;
+        }
+    </style>   
+</head>
+<body>
+<article>     
+    <table class="visible">
+        <tr>
+            <td style="text-align: right;">
+                <input type="text" id="conference-name" placeholder="Conference Name">
+            </td>
+            <td>
+                <button id="start-conferencing">Start video-conferencing</button>
+            </td>
+        </tr>
+    </table>
+    <table id="rooms-list" class="visible"></table>
+
+    <table class="visible">
+        <tr>
+            <td style="text-align: center;">
+                <h2>
+                    <strong>Private conference</strong> ?? 
+                    <a href="/video-conferencing/" target="_blank" 
+                        title="Open this link in new tab. Then your conference room will be private!">
+                        <code>/video-conferencing/<strong id="unique-token">#123456789</strong></code>
+                    </a>
+                </h2>
+            </td>
+        </tr>
+    </table>
+    <div id="selfVideo"></div>
+    <br>
+    <div id="participants"></div>
+
+    <script src="js/webrtc/socketio.js"></script>
+    <script src="js/webrtc/RTCPeerConnection-v1.5.js"></script>
+    <script src="js/webrtc/conference.js"></script>
+    <script src="js/webrtc/conference-ui.js"></script>    
+    </section>
+</article>
+<footer>
+    <p>       
+    </p>
+</footer>
+</body>
+</html>
