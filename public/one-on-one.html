@@ -205,8 +205,7 @@
             return div
         }
 
-        console.debug('about to check presence of a room');
-        debugger;
+        console.debug('about to check presence of a room');        
             new window.Firebase('https://rtcweb.firebaseIO.com/' + hash).once('value', function (data) {
                 var isRoomPresent = data.val() != null;
                 if (isRoomPresent) {

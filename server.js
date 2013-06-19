@@ -1,19 +1,13 @@
-/*  MIT License: https://webrtc-experiment.appspot.com/licence/ -- https://github.com/muaz-khan */
-
-// var port = 80; // use port:80 for non-localhost tests
-var port = 8888; // use port:8888 for localhost tests
-
 var express = require("express");
 var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+var server = require('http').createServer(app).listen(process.env.VCAP_APP_PORT || 8080);
 var path = require('path');
+var io = require('socket.io').listen(server, { log: false });
 
 app.configure(function(){  
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-server.listen(port);
 
 /* -------------- <socket.io> -------------- */
 io.sockets.on('connection', function (socket) {
